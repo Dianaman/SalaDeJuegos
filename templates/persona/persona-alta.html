@@ -1,0 +1,33 @@
+<form class="form-persona" name="FormAltaPersona">
+	<h1>Alta de personas</h1>
+
+	<input type="text" name="apellido" ng-model="persona.apellido" placeholder="Ingrese apellido" required/>
+	<input type="text" name="nombre" ng-model="persona.nombre" placeholder="Ingrese nombre" required/>
+	<input type="email" name="email" ng-model="persona.email" placeholder="Ingrese email" required/>
+	<input type="number" name="edad" ng-model="persona.edad" placeholder="Ingrese edad" required/>
+	<select name="estado" ng-model="persona.estado">
+		<option value="">-- Seleccione opcion --</option>
+		<option value="Soltero">Soltero</option>
+		<option value="Soltero">Casado</option>
+		<option value="Soltero">Divorciado</option>
+		<option value="Soltero">Viudo</option>
+	</select>
+	<br>
+	<div class="tercio"><b>Sexo</b></div>
+	<div class="tercio">Femenino <input type="radio" name="sexo" ng-model="persona.sexo" value="Femenino"/></div>
+	<div class="tercio">Masculino <input type="radio" name="sexo" ng-model="persona.sexo" value="Masculino"/></div>
+
+	<input type="number" name="dni" ng-model="persona.dni" placeholder="Ingrese dni" required/>
+	<input type="date" name="nacimiento" ng-model="persona.nacimiento" placeholder="Ingrese fecha de nacimiento" required/>
+	<br>
+	<h4>Lenguajes de programacion</h4>
+	<div class="sextos">C# <input type="checkbox" name="lenguajeDeProgramacion" ng-model="persona.lenguaje" value="CSharp"/></div>
+	<div class="sextos">Java <input type="checkbox" name="lenguajeDeProgramacion" ng-model="persona.lenguaje" value="Java"/></div>
+	<div class="sextos">HTML <input type="checkbox" name="lenguajeDeProgramacion" ng-model="persona.lenguaje" value="HTML"/></div>
+	<div class="sextos">C/C++ <input type="checkbox" name="lenguajeDeProgramacion" ng-model="persona.lenguaje" value="C"/></div>
+	<div class="sextos">PHP <input type="checkbox" name="lenguajeDeProgramacion" ng-model="persona.lenguaje" value="PHP"/></div>
+	<div class="sextos">MySQL <input type="checkbox" name="lenguajeDeProgramacion" ng-model="persona.lenguaje" value="MySQL"/></div>
+	
+	
+	<br><br><button type="submit" name="btnRegistrar" ng-click="enviarDatos()">Enviar datos</button>
+</form>

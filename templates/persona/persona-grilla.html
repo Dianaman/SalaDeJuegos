@@ -1,0 +1,28 @@
+<div class="form-persona">
+	<h1>Grilla de personas</h1>
+	<hr>
+	<div class="tabla-col">
+		<b>Nombre</b>
+	</div>
+	<div class="tabla-col">
+		<b>Apellido</b>
+	</div>
+	<div class="tabla-col">
+		<b>Email</b>
+	</div>
+	<div class="tabla-col">
+		<b>Edad</b>
+	</div>
+	<div class="tabla-col">
+		<b>Sexo</b>
+	</div><hr>
+
+	<div ng-repeat="persona in personas">
+		<div class="tabla-col" ng-bind="persona.nombre"></div>
+		<div class="tabla-col" ng-bind="persona.apellido"></div>
+		<div class="tabla-col" ng-bind="persona.email"></div>
+		<div class="tabla-col" ng-bind="persona.edad"></div>
+		<div class="tabla-col" ng-bind="persona.sexo"></div>
+	</div>
+
+</div>

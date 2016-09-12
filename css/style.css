@@ -1,0 +1,52 @@
+.form-persona{
+	display:block;
+	color:grey;
+	background-color:#81F79F;
+	border-radius: 25px;padding:20px 5%;
+	margin-bottom:10%;
+	font-family:tahoma;
+}
+.form-persona h1, form.form-persona h4 {
+	padding-left: 5%;
+}
+.form-persona input[type="text"],
+.form-persona input[type="email"],
+.form-persona input[type="password"],
+.form-persona input[type="number"],
+.form-persona input[type="date"],
+select, button
+{
+	width:90%;
+	margin-left:5%;
+	margin-right:5%;
+	margin-bottom:1.5%;
+	border-radius: 10px;
+	height: 4rem;
+	padding-left:5px;
+}
+.form-persona button{
+	text-align: center;
+	background-color:#04B486;
+	color:white;
+	border: 1px solid grey;
+	font-size: 2rem;
+	letter-spacing: 0.5rem;
+}
+
+div.tercio{
+	width:28%;
+	padding-left:6%;
+	font-size:1.7rem;
+	display:inline-block;
+}
+div.sextos{
+	width:15%;
+	padding-left:6%;
+	font-size:1.4rem;
+	display:inline-block;	
+}
+div.tabla-col{
+	text-align: center;
+	width:18%;
+	display:inline-block;
+}
