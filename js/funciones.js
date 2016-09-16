@@ -1,4 +1,4 @@
-var salaApp = angular.module("salaDeJuegosApp", ['ui.router']);
+var salaApp = angular.module("salaDeJuegosApp", ['ui.router', 'angularFileUpload']);
 
 salaApp.config(function($stateProvider, $urlRouterProvider){
 	$stateProvider
@@ -52,8 +52,69 @@ salaApp.controller("PersonaMenuCtrl", function($scope, $state){
 	}
 });
 
-salaApp.controller("PersonaAltaCtrl", function($scope){
+salaApp.controller("PersonaAltaCtrl", function($scope, $state, FileUploader, $http){
+	$scope.SubidorDeArchivos = new FileUploader({url:'servidor/Archivos.php'});
+	$scope.SubidorDeArchivos.onSuccessItem = function(item, response, status, headers){
 
+	}
+
+	 // FILTERS
+
+        $scope.SubidorDeArchivos.filters.push({
+            name: 'customFilter',
+            fn: function(item /*{File|FileLikeObject}*/, options) {
+                return this.queue.length < 10;
+            }
+        });
+
+        // CALLBACKS
+
+        $scope.SubidorDeArchivos.onWhenAddingFileFailed = function(item /*{File|FileLikeObject}*/, filter, options) {
+            console.info('onWhenAddingFileFailed', item, filter, options);
+        };
+        $scope.SubidorDeArchivos.onAfterAddingFile = function(fileItem) {
+            console.info('onAfterAddingFile', fileItem);
+        };
+        $scope.SubidorDeArchivos.onAfterAddingAll = function(addedFileItems) {
+            console.info('onAfterAddingAll', addedFileItems);
+        };
+        $scope.SubidorDeArchivos.onBeforeUploadItem = function(item) {
+            console.info('onBeforeUploadItem', item);
+        };
+        $scope.SubidorDeArchivos.onProgressItem = function(fileItem, progress) {
+            console.info('onProgressItem', fileItem, progress);
+        };
+        $scope.SubidorDeArchivos.onProgressAll = function(progress) {
+            console.info('onProgressAll', progress);
+        };
+        $scope.SubidorDeArchivos.onSuccessItem = function(fileItem, response, status, headers) {
+            console.info('onSuccessItem', fileItem, response, status, headers);
+        };
+        $scope.SubidorDeArchivos.onErrorItem = function(fileItem, response, status, headers) {
+            console.info('onErrorItem', fileItem, response, status, headers);
+        };
+        $scope.SubidorDeArchivos.onCancelItem = function(fileItem, response, status, headers) {
+            console.info('onCancelItem', fileItem, response, status, headers);
+        };
+        $scope.SubidorDeArchivos.onCompleteItem = function(fileItem, response, status, headers) {
+            console.info('onCompleteItem', fileItem, response, status, headers);
+        };
+        $scope.SubidorDeArchivos.onCompleteAll = function() {
+            console.info('onCompleteAll');
+        };
+
+        console.info('uploader', $scope.SubidorDeArchivos);
+
+
+        // -------------------------------
+
+
+        var controller = $scope.controller = {
+            isImage: function(item) {
+                var type = '|' + item.type.slice(item.type.lastIndexOf('/') + 1) + '|';
+                return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
+            }
+        };
 });
 
 salaApp.controller("PersonaGrillaCtrl", function($scope){

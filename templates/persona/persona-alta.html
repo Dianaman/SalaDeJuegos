@@ -1,4 +1,4 @@
-<form class="form-persona" name="FormAltaPersona">
+<form class="form-persona" name="FormAltaPersona" nv-file-drop="" uploader="SubidorDeArchivos">
 	<h1>Alta de personas</h1>
 
 	<input type="text" name="apellido" ng-model="persona.apellido" placeholder="Ingrese apellido" required/>
@@ -27,7 +27,58 @@
 	<div class="sextos">C/C++ <input type="checkbox" name="lenguajeDeProgramacion" ng-model="persona.lenguaje" value="C"/></div>
 	<div class="sextos">PHP <input type="checkbox" name="lenguajeDeProgramacion" ng-model="persona.lenguaje" value="PHP"/></div>
 	<div class="sextos">MySQL <input type="checkbox" name="lenguajeDeProgramacion" ng-model="persona.lenguaje" value="MySQL"/></div>
-	
-	
+    <div ng-show="SubidorDeArchivos.isHTML5">
+            <div class="over-zone zone" nv-file-over="" uploader="SubidorDeArchivos">
+                Base drop zone indication
+            </div>
+            <!-- Example: ng-file-drop | ng-file-drop="options" -->
+            <div nv-file-drop="" nv-file-over="" uploader="SubidorDeArchivos" options="{url: '/foo'}" over-class="other-over-zone" class="other-drop-zone zone">
+                One more drop zone with its own settings (and indication)
+            </div>
+            <div style="clear: both;"></div>
+        </div>
+	<input type="file" nv-file-select="" uploader="SubidorDeArchivos" multiple />
+
+<h2>The queue. Length: {{ uploader.queue.length }}</h2>
+        <ul>
+            <li ng-repeat="item in SubidorDeArchivos.queue">
+                <div>Name: {{ item.file.name }}</div>
+                <div>Size: {{ item.file.size/1024/1024|number:2 }} Mb</div>
+                <div ng-show="SubidorDeArchivos.isHTML5">
+                    Progress: {{ item.progress }}
+                    <div class="item-progress-box">
+                        <div class="item-progress" ng-style="{ 'width': item.progress + '%' }"></div>
+                    </div>
+                </div>
+                <div ng-if="controller.isImage(item._file)">
+                    Thumbnail (only images):
+                        <!-- Image preview -->
+                        <!--auto height-->
+                        <!--<div ng-thumb="{ file: item.file, width: 100 }"></div>-->
+                        <!--auto width-->
+                        <div ng-thumb="{ file: item._file, height: 100 }"></div>
+                        <!--fixed width and height -->
+                        <!--<div ng-thumb="{ file: item.file, width: 100, height: 100 }"></div>-->
+                </div>
+                <div>
+                    <button ng-click="item.upload()" ng-disabled="item.isReady || item.isUploading || item.isSuccess">Upload</button>
+                    <button ng-click="item.cancel()" ng-disabled="!item.isUploading">Cancel</button>
+                    <button ng-click="item.remove()">Remove</button>
+                </div>
+            </li>
+        </ul>
+<div>
+            <div>
+                Total progress: {{ $scope.SubidorDeArchivos.progress }}
+                <div class="total-progress-box">
+                    <div class="total-progress" ng-style="{ 'width': SubidorDeArchivos.progress + '%' }"></div>
+                </div>
+            </div>
+            <button ng-click="SubidorDeArchivos.uploadAll()" ng-disabled="!SubidorDeArchivos.getNotUploadedItems().length">Upload all</button>
+            <button ng-click="SubidorDeArchivos.cancelAll()" ng-disabled="!SubidorDeArchivos.isUploading">Cancel all</button>
+            <button ng-click="SubidorDeArchivos.clearQueue()" ng-disabled="!SubidorDeArchivos.queue.length">Remove all</button>
+        </div>
+
+
 	<br><br><button type="submit" name="btnRegistrar" ng-click="enviarDatos()">Enviar datos</button>
 </form>
