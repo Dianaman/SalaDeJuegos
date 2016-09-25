@@ -1,7 +1,30 @@
-var salaApp = angular.module("salaDeJuegosApp", ['ui.router', 'angularFileUpload']);
+var salaApp = angular.module("salaDeJuegosApp", ['ui.router', 'satellizer']);
 
-salaApp.config(function($stateProvider, $urlRouterProvider){
+salaApp.config(function($stateProvider, $urlRouterProvider, $authProvider){
+	$authProvider.loginUrl = 'Clase7/SalaDeJuegos/servidor/php/auth.php';
+	$authProvider.tokenName = 'MiTokenGeneradorEnPHP';
+	$authProvider.tokenPrefix = 'Aplicacion';
+	$authProvider.authHeader = 'data';
+
 	$stateProvider
+		.state(
+			"usuario", {
+				url: '/usuario',
+				abstract: true,
+				templateUrl: 'templates/usuario/usuario.html'
+			})
+		.state(
+			"usuario.login", {
+				url: '/login',
+				views:{
+					"content": {
+						templateUrl: 'templates/usuario/usuario-login.html',
+						controller: 'LoginCtrl'
+					}
+				}
+			})
+
+
 		.state(
 			"persona", {
 				url: '/persona',
@@ -37,12 +60,40 @@ salaApp.config(function($stateProvider, $urlRouterProvider){
 						controller: 'PersonaGrillaCtrl'
 					}
 				}
-			})
+			});
 		$urlRouterProvider.otherwise("/persona/menu");
 		
 });
 
-salaApp.controller("PersonaMenuCtrl", function($scope, $state){
+salaApp.controller("LoginCtrl", function($scope, $auth){
+
+	$scope.iniciarSesion = function(){
+
+		$auth.login($scope.usuario)
+		.then(function(response){
+			console.info("correcto", response);
+
+			if($auth.isAuthenticated()){
+				console.info("token", $auth.getToken());
+			}
+			else{
+				console.info("no token", $auth.getToken());
+			}
+			//solo sabemos si nos devuelve un token correcto es con el isAuthenticated
+		})
+		.catch(function(response){
+			console.error(response);
+		})
+	}
+});
+
+salaApp.controller("PersonaMenuCtrl", function($scope, $state, $auth){
+	$scope.isAuthenticated = $auth.isAuthenticated();
+
+	if(!$scope.isAuthenticated){
+		$state.go('usuario.login');
+	}
+
 	$scope.irAAlta = function(){
 		$state.go('persona.alta');
 	}
