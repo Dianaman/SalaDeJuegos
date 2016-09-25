@@ -20,6 +20,7 @@ salaApp.config(function($stateProvider, $urlRouterProvider){
 			})
 		.state(
 			"persona.alta", {
+				cache:false,
 				url: '/alta',
 				views:{
 					"content": {

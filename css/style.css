@@ -63,16 +63,6 @@ div.tabla-col{
     background-color: #FFBEA3;
 }
 
-.other-drop-zone {
-    border: 2px dashed burlywood;
-    padding: 4px;
-    height: 100px;
-}
-
-.other-over-zone {
-    background-color: moccasin;
-}
-
 .bg {
     background-color: lightgreen;
 }
@@ -86,8 +76,6 @@ div.tabla-col{
 .item-progress-box {
     height: 20px;
     margin-top: -20px;
-    margin-left: 60px;
-    margin-right: 10px;
 }
 
 .item-progress {
@@ -99,8 +87,6 @@ div.tabla-col{
 .total-progress-box {
     height: 20px;
     margin-top: -20px;
-    margin-left: 90px;
-    margin-right: 10px;
 }
 
 .total-progress {
@@ -130,4 +116,28 @@ ul > li:nth-child(odd) {
 }
 
 .zone {
-    width: 49%;
+    width: 50%;
+    margin: auto;
+}
+
+div.photo-container{
+    text-align: center;
+    margin-top: 20px;
+}
+button.photo-btn{
+    display:inline-block;
+    width: 30%;
+    margin:5px;
+    background-color: snow;
+    color: #04B486;
+}
+
+ul.photo-ul{
+
+    padding-left: 0px;
+}
+ul.photo-ul li{
+    list-style-type: none;
+    padding:5px;
+    text-align: center;
+}
