@@ -1,6 +1,24 @@
-var salaApp = angular.module("salaDeJuegosApp", ['ui.router', 'angularFileUpload']);
+var salaApp = angular.module("salaDeJuegosApp", ['ui.router', 'angularFileUpload', 'satellizer']);
 
-salaApp.config(function($stateProvider, $urlRouterProvider){
+salaApp.config(function($stateProvider, $urlRouterProvider, $authProvider){
+	$authProvider.loginUrl = 'SalaDeJuegos/servidor/jwt/php/auth.php';
+	$authProvider.tokenName = 'SalaDeJuegosToken';
+	$authProvider.tokenPrefix = 'Aplicacion';
+	$authProvider.authHeader = 'data';
+
+	$authProvider.github({
+	clientID: '5d8c7d10a65e7bc96e92',
+	  url: '/usuario/login',
+	  authorizationEndpoint: 'https://github.com/login/oauth/authorize',
+	  redirectUri: window.location.origin,
+	  optionalUrlParams: ['scope'],
+	  scope: ['user:email'],
+	  scopeDelimiter: ' ',
+	  oauthType: '2.0',
+	  popupOptions: { width: 1020, height: 618 }
+	});
+
+
 	$stateProvider
 		.state(
 			"persona", {
@@ -39,6 +57,36 @@ salaApp.config(function($stateProvider, $urlRouterProvider){
 					}
 				}
 			})
+		.state(
+			"usuario", {
+				url: '/usuario',
+				abstract: true,
+				templateUrl: 'templates/usuario/usuario.html'
+			})
+
+		.state(
+			"usuario.login", {
+				url: '/login',
+				views:{
+					"content": {
+						templateUrl: 'templates/usuario/login.html',
+						controller: 'LoginCtrl'
+					}
+				}
+			})
+
+		.state(
+			"usuario.signin", {
+				url: '/signin',
+				views:{
+					"content": {
+						templateUrl: 'templates/usuario/signin.html',
+						controller: 'SigninCtrl'
+					}
+				}
+			})
+
+		
 		$urlRouterProvider.otherwise("/persona/menu");
 		
 });
@@ -127,3 +175,12 @@ salaApp.controller("PersonaGrillaCtrl", function($scope){
 	"sexo": "masculino"}];
 });
 
+salaApp.controller("LoginCtrl", function($scope, $auth){
+	 $scope.authenticate = function(provider) {
+      $auth.authenticate(provider);
+    };
+});
+
+salaApp.controller("SigninCtrl", function($scope){
+	
+})

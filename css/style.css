@@ -51,7 +51,10 @@ div.tabla-col{
 	display:inline-block;
 }
 
-
+button[disabled]{
+    background-color:rgba(0,0,0,0.4);
+    color: rgba(0,0,0,0.4);
+}
 
 
 
