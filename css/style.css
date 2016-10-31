@@ -55,6 +55,15 @@ button[disabled]{
     background-color:rgba(0,0,0,0.4);
     color: rgba(0,0,0,0.4);
 }
+div.tabla-col{
+    text-align: center;
+    width:15%;
+    display:inline-block;
+}
+button.btn-table{
+    font-size: 10px;
+    letter-spacing:2px;
+}
 
 
 

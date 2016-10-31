@@ -8,21 +8,23 @@
 		<b>Apellido</b>
 	</div>
 	<div class="tabla-col">
-		<b>Email</b>
+		<b>Dni</b>
 	</div>
 	<div class="tabla-col">
-		<b>Edad</b>
+		<b>Foto</b>
 	</div>
 	<div class="tabla-col">
-		<b>Sexo</b>
+	</div>
+	<div class="tabla-col">
 	</div><hr>
 
 	<div ng-repeat="persona in personas">
 		<div class="tabla-col" ng-bind="persona.nombre"></div>
 		<div class="tabla-col" ng-bind="persona.apellido"></div>
-		<div class="tabla-col" ng-bind="persona.email"></div>
-		<div class="tabla-col" ng-bind="persona.edad"></div>
-		<div class="tabla-col" ng-bind="persona.sexo"></div>
+		<div class="tabla-col" ng-bind="persona.dni"></div>
+		<div class="tabla-col"><!--<img src="{{persona.foto}}">--></div>
+		<div class="tabla-col"><button class="btn-table" ng-click="modificarPersona(persona)">Modificar</button></div>
+		<div class="tabla-col"><button class="btn-table" ng-click="borrarPersona(persona)">Borrar</button></div>
 	</div>
 
 </div>

@@ -7,12 +7,11 @@ salaApp.config(function($stateProvider, $urlRouterProvider, $authProvider){
 	$authProvider.authHeader = 'data';
 
 	$authProvider.github({
-	clientID: '5d8c7d10a65e7bc96e92',
 	  url: '/usuario/login',
-	  authorizationEndpoint: 'https://github.com/login/oauth/authorize',
+	  authorizationEndpoint: 'http://github.com/login',
 	  redirectUri: window.location.origin,
-	  optionalUrlParams: ['scope'],
-	  scope: ['user:email'],
+	  optionalUrlParams: ['login_field'],
+	  login_field: ['login:diana.man.91@gmail.com'],
 	  scopeDelimiter: ' ',
 	  oauthType: '2.0',
 	  popupOptions: { width: 1020, height: 618 }
@@ -39,7 +38,7 @@ salaApp.config(function($stateProvider, $urlRouterProvider, $authProvider){
 		.state(
 			"persona.alta", {
 				cache:false,
-				url: '/alta',
+				url: '/alta/:id',
 				views:{
 					"content": {
 						templateUrl: 'templates/persona/persona-alta.html',
@@ -91,6 +90,13 @@ salaApp.config(function($stateProvider, $urlRouterProvider, $authProvider){
 		
 });
 
+salaApp.run(function($rootScope){
+  $rootScope.usuario = {
+  	nombre: '',
+  	tipo: '',
+  };
+});
+
 salaApp.controller("PersonaMenuCtrl", function($scope, $state){
 	$scope.irAAlta = function(){
 		$state.go('persona.alta');
@@ -101,78 +107,97 @@ salaApp.controller("PersonaMenuCtrl", function($scope, $state){
 	}
 });
 
-salaApp.controller("PersonaAltaCtrl", function($scope, $state, FileUploader, $http){
+salaApp.controller("PersonaAltaCtrl", function($scope, $state, FileUploader, $http, $stateParams, $timeout){
+
+	$scope.persona = {
+		apellido: 'Jansen', 
+		nombre: 'Floor',
+		email: 'floor.jansen@mail.com',
+		edad: 35,
+		estado: 'Soltero',
+		sexo: 'Femenino',
+		dni:9443556,
+		nacimiento: new Date(1984, 05, 11, 0, 0, 0, 0),
+		foto: ''
+	};
+	
+	$scope.SubidorDeArchivos = new FileUploader({url:'servidor/nexo.php'});
+
+    $scope.SubidorDeArchivos.onSuccessItem = function(fileItem, response, status, headers) {
+        console.info('onSuccessItem', fileItem, response, status, headers);
+        $scope.persona.foto = fileItem;
+    };
+	
+	$scope.SubidorDeArchivos.onErrorItem = function(fileItem, response, status, headers) {
+        console.info('onErrorItem', fileItem, response, status, headers);
+    };
+
+	if($stateParams.id != ""){
+		$scope.id = JSON.parse($stateParams.id);
+	}
+
+	$scope.enviarDatos = function(){
+		var datost = JSON.stringify($scope.persona);
+
+		$http.post('http://localhost/ws1/usuario/'+ datost)
+		.then(function(response){
+			console.info(response);
+
+			$state.go('persona.grilla');
+		}, function errorCallback(response){
+			console.info(response);
+		});
+	}
+
+
 	$scope.SubidorDeArchivos = new FileUploader({url:'servidor/Archivos.php'});
 	$scope.SubidorDeArchivos.onSuccessItem = function(item, response, status, headers){
 
 	}
 
-	 // FILTERS
 
-        $scope.SubidorDeArchivos.filters.push({
-            name: 'customFilter',
-            fn: function(item /*{File|FileLikeObject}*/, options) {
-                return this.queue.length < 10;
-            }
-        });
-
-        // CALLBACKS
-
-        $scope.SubidorDeArchivos.onWhenAddingFileFailed = function(item /*{File|FileLikeObject}*/, filter, options) {
-            console.info('onWhenAddingFileFailed', item, filter, options);
-        };
-        $scope.SubidorDeArchivos.onAfterAddingFile = function(fileItem) {
-            console.info('onAfterAddingFile', fileItem);
-        };
-        $scope.SubidorDeArchivos.onAfterAddingAll = function(addedFileItems) {
-            console.info('onAfterAddingAll', addedFileItems);
-        };
-        $scope.SubidorDeArchivos.onBeforeUploadItem = function(item) {
-            console.info('onBeforeUploadItem', item);
-        };
-        $scope.SubidorDeArchivos.onProgressItem = function(fileItem, progress) {
-            console.info('onProgressItem', fileItem, progress);
-        };
-        $scope.SubidorDeArchivos.onProgressAll = function(progress) {
-            console.info('onProgressAll', progress);
-        };
-        $scope.SubidorDeArchivos.onSuccessItem = function(fileItem, response, status, headers) {
-            console.info('onSuccessItem', fileItem, response, status, headers);
-        };
-        $scope.SubidorDeArchivos.onErrorItem = function(fileItem, response, status, headers) {
-            console.info('onErrorItem', fileItem, response, status, headers);
-        };
-        $scope.SubidorDeArchivos.onCancelItem = function(fileItem, response, status, headers) {
-            console.info('onCancelItem', fileItem, response, status, headers);
-        };
-        $scope.SubidorDeArchivos.onCompleteItem = function(fileItem, response, status, headers) {
-            console.info('onCompleteItem', fileItem, response, status, headers);
-        };
-        $scope.SubidorDeArchivos.onCompleteAll = function() {
-            console.info('onCompleteAll');
-        };
-
-        console.info('uploader', $scope.SubidorDeArchivos);
-
-
-        // -------------------------------
-
-
-        var controller = $scope.controller = {
-            isImage: function(item) {
-                var type = '|' + item.type.slice(item.type.lastIndexOf('/') + 1) + '|';
-                return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
-            }
-        };
 });
 
-salaApp.controller("PersonaGrillaCtrl", function($scope){
+salaApp.controller("PersonaGrillaCtrl", function($scope, $http, $state){
+	$http.get('http://localhost/ws1/usuarios')
+	.then(function(response){
+		$scope.personas = response.data;
+	}, function errorCallback(response){
+		console.info(response);
+	});
+
+	$scope.borrarPersona = function(selectedIndex){
+		var dato = JSON.stringify(selectedIndex.id);
+
+		$http.delete('http://localhost/ws1/usuario/'+ dato)
+		.then(function(response){
+			console.info(response);
+
+		}, function errorCallback(response){
+			console.info(response);
+		});
+	}
+/*
 	$scope.personas = [
 	{"nombre": "Ramiro",
 	"apellido": "Torres",
 	"email": "ramiro.torres@gmail.com",
 	"edad": 30,
 	"sexo": "masculino"}];
+	*/
+
+	$scope.modificarPersona = function(selectedIndex){
+		var idParam = JSON.stringify(selectedIndex.id);
+		$state.go('persona.alta', {id:idParam});
+
+	}
+
+	/*$scope.personas = [
+	{"nombre": "Ramiro",
+	"apellido": "Torres",
+	"email": "ramiro.torres@gmail.com",
+	"edad": 30,
+	"sexo": "masculino"}];*/
 });
 
 salaApp.controller("LoginCtrl", function($scope, $auth){
@@ -184,3 +209,24 @@ salaApp.controller("LoginCtrl", function($scope, $auth){
 salaApp.controller("SigninCtrl", function($scope){
 	
 })
+
+salaApp.directive('numbersOnly', function(){
+   return {
+     require: 'ngModel',
+     link: function(scope, element, attrs, modelCtrl) {
+       modelCtrl.$parsers.push(function (inputValue) {
+           // this next if is necessary for when using ng-required on your input. 
+           // In such cases, when a letter is typed first, this parser will be called
+           // again, and the 2nd time, the value will be undefined
+           if (inputValue == undefined) return '' 
+           var transformedInput = inputValue.replace(/[^0-9]/g, ''); 
+           if (transformedInput!=inputValue) {
+              modelCtrl.$setViewValue(transformedInput);
+              modelCtrl.$render();
+           }         
+
+           return transformedInput;         
+       });
+     }
+   };
+});
